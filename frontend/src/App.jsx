@@ -361,8 +361,7 @@ function Checkout({ items, clear }) {
 
   const methods = [
     { id: "JazzCash", color: "#d97706", icon: "JC" },
-    { id: "EasyPaisa", color: "#059669", icon: "EP" },
-    { id: "Bank", color: "#2563eb", icon: "🏦" }
+    { id: "EasyPaisa", color: "#059669", icon: "EP" }
   ];
 
   return (
@@ -379,7 +378,7 @@ function Checkout({ items, clear }) {
         </div>
 
         <h3 className="text-sm font-semibold uppercase text-slate-400 mb-4">Select Payment Method</h3>
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-6">
           {methods.map(m => (
             <button 
               key={m.id}
@@ -391,13 +390,6 @@ function Checkout({ items, clear }) {
             </button>
           ))}
         </div>
-
-        {method === "Bank" && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="bank-details-box">
-            <p className="text-xs text-slate-400 mb-1">Bank Account Transfer</p>
-            <p className="text-sm font-mono text-blue-300">IBAN: PK72 BANK 0001 2345 6789</p>
-          </motion.div>
-        )}
 
         <button onClick={pay} disabled={loading || !items.length} className="btn-primary w-full mt-6">
           {loading ? <span className="spinner-sm" /> : `Pay with ${method}`}
