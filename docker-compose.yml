@@ -1,0 +1,94 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: tradenexus-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  user-service:
+    build: ./user-service
+    container_name: tradenexus-user-service
+    environment:
+      - PORT=4001
+      - MONGO_URI=mongodb://mongo:27017/tradenexus_users
+      - JWT_SECRET=super-secret-key
+      - ORDER_SERVICE_URL=http://order-service:4003
+    ports:
+      - "4001:4001"
+    depends_on:
+      - mongo
+
+  product-service:
+    build: ./product-service
+    container_name: tradenexus-product-service
+    environment:
+      - PORT=4002
+      - MONGO_URI=mongodb://mongo:27017/tradenexus_products
+      - JWT_SECRET=super-secret-key
+    ports:
+      - "4002:4002"
+    depends_on:
+      - mongo
+
+  payment-service:
+    build: ./payment-service
+    container_name: tradenexus-payment-service
+    environment:
+      - PORT=4004
+      - MONGO_URI=mongodb://mongo:27017/tradenexus_payments
+    ports:
+      - "4004:4004"
+    depends_on:
+      - mongo
+
+  order-service:
+    build: ./order-service
+    container_name: tradenexus-order-service
+    environment:
+      - PORT=4003
+      - MONGO_URI=mongodb://mongo:27017/tradenexus_orders
+      - JWT_SECRET=super-secret-key
+      - PAYMENT_SERVICE_URL=http://payment-service:4004
+      - PRODUCT_SERVICE_URL=http://product-service:4002
+    ports:
+      - "4003:4003"
+    depends_on:
+      - mongo
+      - payment-service
+      - product-service
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: tradenexus-api-gateway
+    environment:
+      - PORT=4000
+      - JWT_SECRET=super-secret-key
+      - USER_SERVICE_URL=http://user-service:4001
+      - PRODUCT_SERVICE_URL=http://product-service:4002
+      - ORDER_SERVICE_URL=http://order-service:4003
+      - PAYMENT_SERVICE_URL=http://payment-service:4004
+    ports:
+      - "4000:4000"
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      - payment-service
+
+  frontend:
+    build: ./frontend
+    container_name: tradenexus-frontend
+    environment:
+      - VITE_API_BASE_URL=http://localhost:4000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+
+volumes:
+  mongo_data:
