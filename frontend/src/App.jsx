@@ -151,7 +151,7 @@ function Home({ addToCart }) {
 }
 
 /* ─────────────── Product Details ─────────────── */
-function ProductDetails({ addToCart }) {
+function ProductDetails({ addToCart, token }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   useEffect(() => {
@@ -189,6 +189,11 @@ function ProductDetails({ addToCart }) {
         <button onClick={() => addToCart(product)} className="btn-primary w-full mt-6">
           <FaShoppingCart className="inline mr-2" /> Add to Cart
         </button>
+        {!token && (
+          <p className="text-xs text-yellow-500 mt-4 text-center bg-yellow-500/10 py-2 rounded-lg border border-yellow-500/20">
+            <FaUser className="inline mr-1" /> Sign in to complete your purchase.
+          </p>
+        )}
       </GlassCard>
     </motion.div>
   );
@@ -291,7 +296,7 @@ function Register() {
 }
 
 /* ─────────────── Cart ─────────────── */
-function Cart({ items, remove }) {
+function Cart({ items, remove, token }) {
   const total = items.reduce((acc, item) => acc + item.qty * item.price, 0);
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -327,9 +332,15 @@ function Cart({ items, remove }) {
               <span>Total</span>
               <span className="text-gradient text-2xl font-bold">${total.toFixed(2)}</span>
             </div>
-            <Link to="/checkout" className="btn-primary w-full mt-4 text-center block">
-              Proceed to Checkout
-            </Link>
+            {token ? (
+              <Link to="/checkout" className="btn-primary w-full mt-4 text-center block">
+                Proceed to Checkout
+              </Link>
+            ) : (
+              <Link to="/login" className="btn-warning w-full mt-4 text-center block">
+                Login to Checkout
+              </Link>
+            )}
           </>
         )}
       </GlassCard>
@@ -619,8 +630,8 @@ export default function App() {
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Home addToCart={cart.add} />} />
-            <Route path="/products/:id" element={<ProductDetails addToCart={cart.add} />} />
-            <Route path="/cart" element={<Cart items={cart.items} remove={cart.remove} />} />
+            <Route path="/products/:id" element={<ProductDetails addToCart={cart.add} token={auth.token} />} />
+            <Route path="/cart" element={<Cart items={cart.items} remove={cart.remove} token={auth.token} />} />
             <Route path="/checkout" element={<Checkout items={cart.items} clear={cart.clear} />} />
             <Route path="/tracking" element={<Tracking />} />
             <Route path="/login" element={<Login setAuth={auth.setAuth} />} />
