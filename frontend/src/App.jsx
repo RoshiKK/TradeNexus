@@ -60,7 +60,6 @@ const fadeUp = {
   visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.45, ease: "easeOut" } })
 };
 
-/* ─────────────── Home / Products ─────────────── */
 function Home({ addToCart }) {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
@@ -150,7 +149,6 @@ function Home({ addToCart }) {
   );
 }
 
-/* ─────────────── Product Details ─────────────── */
 function ProductDetails({ addToCart, token }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -199,7 +197,6 @@ function ProductDetails({ addToCart, token }) {
   );
 }
 
-/* ─────────────── Login ─────────────── */
 function Login({ setAuth }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -242,7 +239,6 @@ function Login({ setAuth }) {
   );
 }
 
-/* ─────────────── Register ─────────────── */
 function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [success, setSuccess] = useState(false);
@@ -295,7 +291,6 @@ function Register() {
   );
 }
 
-/* ─────────────── Cart ─────────────── */
 function Cart({ items, remove, token }) {
   const total = items.reduce((acc, item) => acc + item.qty * item.price, 0);
   return (
@@ -348,7 +343,6 @@ function Cart({ items, remove, token }) {
   );
 }
 
-/* ─────────────── Checkout ─────────────── */
 function Checkout({ items, clear }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -426,7 +420,6 @@ function Checkout({ items, clear }) {
   );
 }
 
-/* ─────────────── Tracking ─────────────── */
 function Tracking() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -482,7 +475,6 @@ function Tracking() {
   );
 }
 
-/* ─────────────── Admin Dashboard ─────────────── */
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -589,10 +581,16 @@ function AdminDashboard() {
   );
 }
 
-/* ─────────────── App Shell ─────────────── */
 export default function App() {
   const auth = useAuth();
   const cart = useCart();
+  const addToCartWithAuth = (product) => {
+    if (!auth.token) {
+      alert("🔐 Authentication Required\nPlease sign in to your account to add products to your cart.");
+      return;
+    }
+    cart.add(product);
+  };
 
   return (
     <div className="app-bg">
@@ -629,8 +627,8 @@ export default function App() {
       <main className="main-content">
         <AnimatePresence mode="wait">
           <Routes>
-            <Route path="/" element={<Home addToCart={cart.add} />} />
-            <Route path="/products/:id" element={<ProductDetails addToCart={cart.add} token={auth.token} />} />
+            <Route path="/" element={<Home addToCart={addToCartWithAuth} />} />
+            <Route path="/products/:id" element={<ProductDetails addToCart={addToCartWithAuth} token={auth.token} />} />
             <Route path="/cart" element={<Cart items={cart.items} remove={cart.remove} token={auth.token} />} />
             <Route path="/checkout" element={<Checkout items={cart.items} clear={cart.clear} />} />
             <Route path="/tracking" element={<Tracking />} />

@@ -8,7 +8,6 @@ const app = express();
 app.use(cors());
 app.use(morgan("combined"));
 
-// Setup proxy routes BEFORE body parser
 setupProxyRoutes(app);
 
 app.use(express.json());
