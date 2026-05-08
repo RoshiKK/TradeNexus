@@ -25,14 +25,14 @@ export default function AdminDashboard() {
     try {
       const [uRes, oRes, pRes] = await Promise.all([
         api.get("/api/users/admin/all-users"),
-        api.get("/api/users/admin/all-orders"),
+        api.get("/api/orders/admin/all"),
         api.get("/api/products")
       ]);
       setUsers(uRes.data);
       setOrders(oRes.data);
       setProducts(pRes.data);
     } catch (e) {
-      console.error(e);
+      console.error("Nexus Sync Error:", e);
     } finally { setLoading(false); }
   };
 
@@ -70,6 +70,13 @@ export default function AdminDashboard() {
           <h1 className="text-4xl font-extrabold tracking-tight">Nexus Dashboard</h1>
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            onClick={fetchAll}
+            className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-400 hover:text-primary hover:border-primary/30 transition-all group"
+            title="Refresh Data"
+          >
+            <Loader2 className={cn("w-5 h-5", loading && "animate-spin")} />
+          </button>
           <button 
             onClick={() => setShowAddModal(true)}
             className="btn-premium px-8"
