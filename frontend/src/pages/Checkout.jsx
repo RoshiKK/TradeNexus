@@ -8,6 +8,7 @@ import { cn } from "../lib/utils";
 export default function Checkout({ items, clear }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [method, setMethod] = useState("JazzCash");
 
   const pay = async () => {
@@ -19,12 +20,21 @@ export default function Checkout({ items, clear }) {
         quantity: items[0].qty,
         paymentMethod: method 
       };
+      setProcessing(true);
       const { data } = await api.post("/api/orders", payload);
-      setResult(data);
-      if (data.paymentStatus === "success") clear();
+      
+      setTimeout(() => {
+        setResult(data);
+        if (data.paymentStatus === "success") clear();
+        setProcessing(false);
+        setLoading(false);
+      }, 2000);
+
     } catch (err) {
       console.error(err);
-    } finally { setLoading(false); }
+      setLoading(false);
+      setProcessing(false);
+    }
   };
 
   const methods = [
@@ -32,10 +42,25 @@ export default function Checkout({ items, clear }) {
     { id: "EasyPaisa", color: "#059669", icon: CreditCard, label: "EasyPaisa Mobile" }
   ];
 
-  // 1. Move the Success Screen to the VERY top so it stays visible even if items are cleared
   if (result && result.paymentStatus === "success") {
     return (
       <div className="min-h-screen flex items-center justify-center py-20 px-6 bg-black">
+        <AnimatePresence>
+          {processing && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center"
+            >
+              <div className="relative">
+                <div className="w-24 h-24 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+                <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-primary" />
+              </div>
+              <h2 className="text-2xl font-black mt-8 tracking-tighter uppercase">Securing Transaction...</h2>
+              <p className="text-slate-500 font-bold text-xs tracking-widest mt-2">Connecting to {method} API Node</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary),0.05),transparent)] pointer-events-none" />
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -86,6 +111,22 @@ export default function Checkout({ items, clear }) {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-32">
+      <AnimatePresence>
+        {processing && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center"
+          >
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+              <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-primary" />
+            </div>
+            <h2 className="text-2xl font-black mt-8 tracking-tighter uppercase">Securing Transaction...</h2>
+            <p className="text-slate-500 font-bold text-xs tracking-widest mt-2">Connecting to {method} API Node</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex flex-col md:flex-row gap-12">
         <div className="flex-1">
           <h1 className="text-4xl font-extrabold tracking-tight mb-8">Finalize Payment</h1>

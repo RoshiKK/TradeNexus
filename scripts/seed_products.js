@@ -1,7 +1,3 @@
-/**
- * TradeNexus - Product Seeding Script (v2 with Images)
- * Run this to populate your database with amazing products.
- */
 const mongoose = require('mongoose');
 
 const MONGO_URI = "mongodb+srv://TradeNexus:TradeNexus%40123@tradenexus.mxtddgf.mongodb.net/products";

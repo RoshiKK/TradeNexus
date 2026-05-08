@@ -56,7 +56,6 @@ exports.updateProfile = async (req, res) => {
   return res.json(user);
 };
 
-// ─── Admin endpoints ───────────────────────────────────────────────
 const axios = require("axios");
 
 exports.getAllUsers = async (req, res) => {

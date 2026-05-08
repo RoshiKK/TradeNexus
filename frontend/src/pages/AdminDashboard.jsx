@@ -80,8 +80,6 @@ export default function AdminDashboard() {
           </button>
         </div>
       </div>
-
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         {stats.map((stat, i) => (
           <motion.div
@@ -104,11 +102,8 @@ export default function AdminDashboard() {
           </motion.div>
         ))}
       </div>
-
-      {/* Main Content Area */}
       <div className="grid grid-cols-1 gap-8">
         <div className="glass-card border-white/5 p-0 overflow-hidden">
-          {/* Tab Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/[0.02]">
             <div className="flex items-center gap-8">
               <button 
@@ -291,7 +286,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Add Product Modal */}
+
       <AnimatePresence>
         {showAddModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">

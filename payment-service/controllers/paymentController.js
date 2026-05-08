@@ -2,7 +2,7 @@ const Payment = require("../models/Payment");
 
 exports.processPayment = async (req, res) => {
   const { orderId, userId, amount, forceFail = false } = req.body;
-  const randomFail = Math.random() < 0.15;
+  const randomFail = false;
   const failed = forceFail || randomFail;
 
   const payment = await Payment.create({
