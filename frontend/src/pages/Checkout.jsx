@@ -32,45 +32,53 @@ export default function Checkout({ items, clear }) {
     { id: "EasyPaisa", color: "#059669", icon: CreditCard, label: "EasyPaisa Mobile" }
   ];
 
+  // 1. Move the Success Screen to the VERY top so it stays visible even if items are cleared
   if (result && result.paymentStatus === "success") {
     return (
-      <div className="max-w-xl mx-auto py-40 px-6">
+      <div className="min-h-screen flex items-center justify-center py-20 px-6 bg-black">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary),0.05),transparent)] pointer-events-none" />
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass-card text-center border-emerald-500/20"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-xl w-full glass-card text-center border-emerald-500/20 p-12 relative z-10"
         >
-          <div className="flex justify-center mb-8">
-            <div className="w-24 h-24 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 text-emerald-500">
-              <CheckCircle className="w-12 h-12" />
+          <motion.div 
+            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}
+            className="flex justify-center mb-10"
+          >
+            <div className="w-28 h-28 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_50px_rgba(16,185,129,0.2)]">
+              <CheckCircle className="w-16 h-16 text-emerald-500" />
             </div>
-          </div>
-          <h1 className="text-4xl font-black mb-4">Payment Success</h1>
-          <p className="text-muted-foreground mb-10">
-            Your {method} payment was processed successfully. Your order is now being synchronized across our distributed network.
+          </motion.div>
+
+          <h1 className="text-4xl font-black mb-4 tracking-tight">System Synchronized</h1>
+          <p className="text-slate-400 mb-10 text-lg leading-relaxed">
+            Your <span className="text-white font-bold">{method}</span> transaction was verified. Your order is now live on the distributed ledger.
           </p>
           
-          <div className="bg-white/5 border border-white/5 rounded-2xl p-6 mb-10 text-left">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Order ID</span>
-              <span className="text-sm font-mono text-emerald-500 font-bold">#{result._id.slice(-8).toUpperCase()}</span>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Method</span>
-              <span className="text-sm font-bold text-slate-300">{method}</span>
+          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 mb-10 text-left space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Transaction Ref</span>
+              <span className="text-sm font-mono text-emerald-500 font-bold tracking-tighter">NX-{result._id.slice(-10).toUpperCase()}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Status</span>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase tracking-widest border border-emerald-500/30">Verified</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Payment Gateway</span>
+              <span className="text-sm font-bold text-slate-200">{method} API v2.4</span>
+            </div>
+            <div className="flex justify-between items-center pt-4 border-t border-white/5">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Network Status</span>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Confirmed</span>
+              </div>
             </div>
           </div>
 
-          <Link to="/tracking" className="btn-premium w-full">
-            <span className="btn-premium-inner gap-2 bg-emerald-950">
-              Go to Track Order <ArrowRight className="w-4 h-4" />
+          <Link to="/tracking" className="btn-premium w-full group">
+            <span className="btn-premium-inner gap-3 bg-emerald-950 py-5">
+              Proceed to Tracking Hub <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
           </Link>
-
         </motion.div>
       </div>
     );
