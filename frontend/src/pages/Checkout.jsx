@@ -46,12 +46,18 @@ export default function Checkout({ items, clear }) {
             </div>
           </div>
           <h1 className="text-4xl font-black mb-4">Payment Success</h1>
-          <p className="text-muted-foreground mb-10">Your transaction has been processed and your order is being prepared for synchronization.</p>
+          <p className="text-muted-foreground mb-10">
+            Your {method} payment was processed successfully. Your order is now being synchronized across our distributed network.
+          </p>
           
           <div className="bg-white/5 border border-white/5 rounded-2xl p-6 mb-10 text-left">
             <div className="flex justify-between items-center mb-4">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Order ID</span>
               <span className="text-sm font-mono text-emerald-500 font-bold">#{result._id.slice(-8).toUpperCase()}</span>
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Method</span>
+              <span className="text-sm font-bold text-slate-300">{method}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Status</span>
@@ -61,9 +67,10 @@ export default function Checkout({ items, clear }) {
 
           <Link to="/tracking" className="btn-premium w-full">
             <span className="btn-premium-inner gap-2 bg-emerald-950">
-              Track Progress <ArrowRight className="w-4 h-4" />
+              Go to Track Order <ArrowRight className="w-4 h-4" />
             </span>
           </Link>
+
         </motion.div>
       </div>
     );

@@ -4,7 +4,7 @@
  */
 const mongoose = require('mongoose');
 
-const MONGO_URI = 'mongodb://localhost:27017/tradenexus_products';
+const MONGO_URI = "mongodb+srv://TradeNexus:TradeNexus%40123@tradenexus.mxtddgf.mongodb.net/products";
 
 const products = [
   {
@@ -48,7 +48,8 @@ async function seed() {
   try {
     console.log('Connecting to MongoDB...');
     await mongoose.connect(MONGO_URI);
-    console.log('Connected!');
+    console.log(`Connected to: ${mongoose.connection.host}`);
+    console.log(`Database Name: ${mongoose.connection.name}`);
 
     const Product = mongoose.model('Product', new mongoose.Schema({
       title: String,

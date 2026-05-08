@@ -28,7 +28,7 @@ export default function Hero({ search, setSearch }) {
           className="text-6xl md:text-8xl font-extrabold tracking-tight mb-6"
         >
           Future of <br />
-          <span className="text-gradient">Commerce</span>
+          <span className="text-gradient">E-Commerce</span>
         </motion.h1>
 
         <motion.p
