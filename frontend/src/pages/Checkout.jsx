@@ -25,7 +25,6 @@ export default function Checkout({ items, clear }) {
       
       setTimeout(() => {
         setResult(data);
-        if (data.paymentStatus === "success") clear();
         setProcessing(false);
         setLoading(false);
       }, 2000);
@@ -78,7 +77,11 @@ export default function Checkout({ items, clear }) {
               <h1 className="text-3xl font-black mb-4 tracking-tight uppercase">Payment Verified</h1>
               <p className="text-slate-400 mb-10">Your transaction via {method} was successful. Order #{result._id.slice(-8).toUpperCase()} is now being processed.</p>
               
-              <Link to="/tracking" className="btn-premium w-full group">
+              <Link 
+                to="/tracking" 
+                onClick={clear}
+                className="btn-premium w-full group"
+              >
                 <span className="btn-premium-inner gap-3 bg-emerald-950 py-5">
                   Track My Order <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
