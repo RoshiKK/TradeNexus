@@ -42,73 +42,6 @@ export default function Checkout({ items, clear }) {
     { id: "EasyPaisa", color: "#059669", icon: CreditCard, label: "EasyPaisa Mobile" }
   ];
 
-  if (result && result.paymentStatus === "success") {
-    return (
-      <div className="min-h-screen flex items-center justify-center py-20 px-6 bg-black">
-        <AnimatePresence>
-          {processing && (
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center"
-            >
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-                <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-primary" />
-              </div>
-              <h2 className="text-2xl font-black mt-8 tracking-tighter uppercase">Securing Transaction...</h2>
-              <p className="text-slate-500 font-bold text-xs tracking-widest mt-2">Connecting to {method} API Node</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary),0.05),transparent)] pointer-events-none" />
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-xl w-full glass-card text-center border-emerald-500/20 p-12 relative z-10"
-        >
-          <motion.div 
-            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}
-            className="flex justify-center mb-10"
-          >
-            <div className="w-28 h-28 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_50px_rgba(16,185,129,0.2)]">
-              <CheckCircle className="w-16 h-16 text-emerald-500" />
-            </div>
-          </motion.div>
-
-          <h1 className="text-4xl font-black mb-4 tracking-tight">System Synchronized</h1>
-          <p className="text-slate-400 mb-10 text-lg leading-relaxed">
-            Your <span className="text-white font-bold">{method}</span> transaction was verified. Your order is now live on the distributed ledger.
-          </p>
-          
-          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 mb-10 text-left space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Transaction Ref</span>
-              <span className="text-sm font-mono text-emerald-500 font-bold tracking-tighter">NX-{result._id.slice(-10).toUpperCase()}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Payment Gateway</span>
-              <span className="text-sm font-bold text-slate-200">{method} API v2.4</span>
-            </div>
-            <div className="flex justify-between items-center pt-4 border-t border-white/5">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Network Status</span>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Confirmed</span>
-              </div>
-            </div>
-          </div>
-
-          <Link to="/tracking" className="btn-premium w-full group">
-            <span className="btn-premium-inner gap-3 bg-emerald-950 py-5">
-              Proceed to Tracking Hub <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Link>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-4xl mx-auto px-6 py-32">
       <AnimatePresence>
@@ -124,6 +57,34 @@ export default function Checkout({ items, clear }) {
             <h2 className="text-2xl font-black mt-8 tracking-tighter uppercase">Securing Transaction...</h2>
             <p className="text-slate-500 font-bold text-xs tracking-widest mt-2">Connecting to {method} API Node</p>
           </motion.div>
+        )}
+
+        {result && result.paymentStatus === "success" && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className="relative max-w-xl w-full glass-card text-center border-emerald-500/20 p-12 shadow-[0_0_100px_rgba(16,185,129,0.1)]"
+            >
+              <div className="flex justify-center mb-8">
+                <div className="w-24 h-24 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                  <CheckCircle className="w-12 h-12 text-emerald-500" />
+                </div>
+              </div>
+              <h1 className="text-3xl font-black mb-4 tracking-tight uppercase">Payment Verified</h1>
+              <p className="text-slate-400 mb-10">Your transaction via {method} was successful. Order #{result._id.slice(-8).toUpperCase()} is now being processed.</p>
+              
+              <Link to="/tracking" className="btn-premium w-full group">
+                <span className="btn-premium-inner gap-3 bg-emerald-950 py-5">
+                  Track My Order <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
